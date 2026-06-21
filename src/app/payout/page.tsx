@@ -18,12 +18,12 @@ export default function PayoutPage() {
 	if (!isConnected) return null
 
 	return (
-		<main className='min-h-screen'>
+		<main className='min-h-screen bg-background'>
 			<Navbar />
 			<div className='max-w-lg mx-auto px-4 py-8 space-y-6'>
-				<h1 className='text-2xl font-bold'>Send Payout</h1>
+				<h1 className='text-2xl font-bold text-foreground'>Send Payout</h1>
 				<WalletCard />
-				<div className='border border-gray-200 rounded-xl p-6'>
+				<div className='bg-card border border-border rounded-xl p-6 shadow-sm'>
 					<PayoutForm />
 				</div>
 			</div>

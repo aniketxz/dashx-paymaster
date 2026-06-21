@@ -26,8 +26,8 @@ type DisplayTransaction = {
 }
 
 const STATUS_STYLES: Record<DisplayTransaction['status'], string> = {
-	success: 'bg-secondary/20 text-secondary-foreground',
-	error: 'bg-destructive/20 text-destructive-foreground',
+	success: 'bg-secondary text-secondary-foreground',
+	error: 'bg-destructive text-destructive-foreground',
 }
 
 function weiToEth(wei: string): string {
@@ -87,72 +87,84 @@ export default function DashboardPage() {
 		<main className='min-h-screen bg-background'>
 			<Navbar />
 			<div className='max-w-2xl mx-auto px-4 py-8 space-y-6'>
-				<h1 className='text-2xl font-bold text-foreground'>Dashboard</h1>
-
-				<WalletCard />
-
-				<div className='flex justify-end'>
+				<div className='flex items-center justify-between'>
+					<h1 className='text-2xl font-bold text-foreground'>Dashboard</h1>
 					<Link
 						href='/payout'
-						className='bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90'
+						className='bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90 active:scale-[0.99] transition-all'
 					>
 						Send Payout →
 					</Link>
 				</div>
 
-				<div className='border border-border rounded-xl overflow-hidden'>
-					<div className='px-4 py-3 border-b border-border'>
-						<h3 className='font-semibold text-sm text-foreground'>
-							Recent Payouts
-						</h3>
+				<WalletCard />
+
+				{/* Recent Payouts Table */}
+				<div className='bg-card border border-border rounded-xl overflow-hidden shadow-sm'>
+					<div className='px-5 py-3.5 border-b border-border flex items-center justify-between'>
+						<h3 className='font-semibold text-sm text-card-foreground'>Recent Payouts</h3>
+						<span className='text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full'>
+							Live
+						</span>
 					</div>
 
 					{isLoading ? (
-						<div className='px-4 py-8 text-center text-sm text-muted-foreground'>
-							Loading history...
+						<div className='px-4 py-10 text-center text-sm text-muted-foreground'>
+							<span className='animate-pulse'>Loading history…</span>
 						</div>
 					) : txns.length === 0 ? (
-						<div className='px-4 py-8 text-center text-sm text-muted-foreground'>
-							No payouts yet. Send your first one →
+						<div className='px-4 py-10 text-center space-y-2'>
+							<p className='text-sm text-muted-foreground'>No payouts yet.</p>
+							<Link
+								href='/payout'
+								className='text-xs text-primary underline underline-offset-2'
+							>
+								Send your first one →
+							</Link>
 						</div>
 					) : (
 						<table className='w-full text-sm'>
 							<thead>
-								<tr className='text-xs text-muted-foreground border-b border-border'>
-									<th className='px-4 py-2 text-left'>To</th>
-									<th className='px-4 py-2 text-left'>Amount</th>
-									<th className='px-4 py-2 text-left'>Status</th>
-									<th className='px-4 py-2 text-left'>Time</th>
-									<th className='px-4 py-2 text-left'>Tx</th>
+								<tr className='text-xs text-muted-foreground bg-muted/70 border-b border-border'>
+									<th className='px-5 py-2.5 text-left font-medium'>To</th>
+									<th className='px-5 py-2.5 text-left font-medium'>Amount</th>
+									<th className='px-5 py-2.5 text-left font-medium'>Status</th>
+									<th className='px-5 py-2.5 text-left font-medium'>Time</th>
+									<th className='px-5 py-2.5 text-left font-medium'>Tx</th>
 								</tr>
 							</thead>
 							<tbody>
 								{txns.map((tx) => (
-									<tr key={tx.hash} className='border-b border-border/50'>
-										<td className='px-4 py-3 font-mono text-xs text-foreground'>
+									<tr
+										key={tx.hash}
+										className='border-b border-border/50 hover:bg-muted/30 transition-colors'
+									>
+										<td className='px-5 py-3 font-mono text-xs text-foreground'>
 											{tx.to
 												? `${tx.to.slice(0, 6)}...${tx.to.slice(-4)}`
 												: '—'}
 										</td>
-										<td className='px-4 py-3 text-foreground'>{tx.amount}</td>
-										<td className='px-4 py-3'>
+										<td className='px-5 py-3 text-foreground font-medium'>
+											{tx.amount}
+										</td>
+										<td className='px-5 py-3'>
 											<span
-												className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUS_STYLES[tx.status]}`}
+												className={`text-xs px-2 py-0.5 rounded-full font-semibold ${STATUS_STYLES[tx.status]}`}
 											>
 												{tx.status}
 											</span>
 										</td>
-										<td className='px-4 py-3 text-muted-foreground text-xs'>
+										<td className='px-5 py-3 text-muted-foreground text-xs'>
 											{new Date(tx.time).toLocaleTimeString()}
 										</td>
-										<td className='px-4 py-3'>
+										<td className='px-5 py-3'>
 											<a
 												href={`https://sepolia.basescan.org/tx/${tx.hash}`}
 												target='_blank'
 												rel='noopener noreferrer'
-												className='text-xs text-primary underline'
+												className='text-xs text-primary underline underline-offset-2 hover:opacity-80 transition-opacity'
 											>
-												{tx.hash.slice(0, 6)}...{tx.hash.slice(-4)}
+												{tx.hash.slice(0, 6)}…{tx.hash.slice(-4)}
 											</a>
 										</td>
 									</tr>

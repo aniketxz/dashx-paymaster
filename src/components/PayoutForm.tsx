@@ -69,8 +69,11 @@ export function PayoutForm() {
 
 	const isLoading = txState.status === 'pending'
 
+	const inputBase =
+		'w-full border rounded-lg px-3 py-2.5 text-sm bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-shadow'
+
 	return (
-		<div className='space-y-4'>
+		<div className='space-y-5'>
 			{showConfirm && (
 				<ConfirmModal
 					recipient={recipient}
@@ -86,7 +89,7 @@ export function PayoutForm() {
 			{txState.status === 'idle' || txState.status === 'error' ? (
 				<div className='space-y-4'>
 					{/* Recipient address input */}
-					<div className='space-y-1'>
+					<div className='space-y-1.5'>
 						<label className='text-sm font-medium text-foreground'>
 							Recipient Address
 						</label>
@@ -98,18 +101,20 @@ export function PayoutForm() {
 								setRecipientError('')
 							}}
 							placeholder='0x...'
-							className={`w-full border rounded-lg px-3 py-2 text-sm font-mono bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
-								recipientError ? 'border-destructive' : 'border-border'
+							className={`${inputBase} font-mono ${
+								recipientError ? 'border-destructive/40' : 'border-border/40'
 							}`}
 						/>
 						{recipientError && (
-							<p className='text-xs text-destructive'>{recipientError}</p>
+							<p className='text-xs text-destructive-foreground'>
+								{recipientError}
+							</p>
 						)}
 					</div>
 
 					{/* Amount input with max button */}
-					<div className='space-y-1'>
-						<div className='flex justify-between'>
+					<div className='space-y-1.5'>
+						<div className='flex justify-between items-center'>
 							<label className='text-sm font-medium text-foreground'>
 								Amount (ETH)
 							</label>
@@ -117,11 +122,9 @@ export function PayoutForm() {
 								<button
 									type='button'
 									onClick={() =>
-										setAmount(
-											(parseFloat(balance.formatted) * 0.9).toFixed(4),
-										)
+										setAmount((parseFloat(balance.formatted) * 0.9).toFixed(4))
 									}
-									className='text-xs text-muted-foreground hover:text-foreground'
+									className='text-xs text-primary hover:text-primary/80 font-medium transition-colors bg-muted px-2 py-1 rounded-md cursor-pointer'
 								>
 									Max: {parseFloat(balance.formatted).toFixed(4)} ETH
 								</button>
@@ -137,29 +140,33 @@ export function PayoutForm() {
 							placeholder='0.01'
 							min='0'
 							step='0.001'
-							className={`w-full border rounded-lg px-3 py-2 text-sm bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring ${
-								amountError ? 'border-destructive' : 'border-border'
+							className={`${inputBase} ${
+								amountError ? 'border-destructive/40' : 'border-border/40'
 							}`}
 						/>
 						{amountError && (
-							<p className='text-xs text-destructive'>{amountError}</p>
+							<p className='text-xs text-destructive-foreground'>
+								{amountError}
+							</p>
 						)}
 					</div>
 
 					{/* Paymaster mocked notice */}
-					<div className='bg-muted rounded-lg px-3 py-2 text-xs text-muted-foreground'>
-						⛽ Gas fee:{' '}
-						<span className='text-secondary font-medium'>Free</span> — sponsored
-						by Paymaster
-						<span className='ml-1 italic'>(mocked)</span>
+					<div className='bg-muted border border-border/10 rounded-lg px-3 py-2.5 text-xs text-muted-foreground/80 flex items-center gap-2'>
+						<span>⛽</span>
+						<span>
+							Gas fee:{' '}
+							<span className='text-secondary font-semibold'>Free</span> —
+							sponsored by Paymaster <span className='italic'>(mocked)</span>
+						</span>
 					</div>
 
 					<button
 						onClick={handleReview}
 						disabled={isLoading}
-						className='w-full bg-primary text-primary-foreground py-3 rounded-lg font-medium hover:opacity-90 disabled:opacity-50'
+						className='w-full bg-primary text-primary-foreground py-3 rounded-lg font-semibold cursor-pointer hover:opacity-90 active:scale-[0.99] transition-all disabled:opacity-50 disabled:cursor-not-allowed'
 					>
-						Review Payout
+						Review Payout →
 					</button>
 				</div>
 			) : null}

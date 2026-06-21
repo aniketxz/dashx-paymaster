@@ -17,49 +17,64 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
 	const shortRecipient = `${recipient.slice(0, 8)}...${recipient.slice(-6)}`
 
-	return (
-		<div className='fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4'>
-			<div className='bg-white rounded-2xl p-6 w-full max-w-sm space-y-4'>
-				<h3 className='font-bold text-lg'>Confirm Payout</h3>
+	const rows: { label: string; value: React.ReactNode }[] = [
+		{ label: 'To', value: <span className='font-mono text-xs'>{shortRecipient}</span> },
+		{ label: 'Amount', value: <span className='font-semibold'>{amount} ETH</span> },
+		{
+			label: 'Gas fee',
+			value: (
+				<span className='text-secondary font-semibold'>
+					Free ✓
+				</span>
+			),
+		},
+		{ label: 'Network', value: 'Base Sepolia' },
+	]
 
-				<div className='space-y-2 text-sm'>
-					<div className='flex justify-between py-2 border-b border-gray-100'>
-						<span className='text-gray-500'>To</span>
-						<span className='font-mono'>{shortRecipient}</span>
-					</div>
-					<div className='flex justify-between py-2 border-b border-gray-100'>
-						<span className='text-gray-500'>Amount</span>
-						<span className='font-semibold'>{amount} ETH</span>
-					</div>
-					<div className='flex justify-between py-2 border-b border-gray-100'>
-						<span className='text-gray-500'>Gas fee</span>
-						<span className='text-green-600 font-medium'>Free ✓</span>
-					</div>
-					<div className='flex justify-between py-2'>
-						<span className='text-gray-500'>Network</span>
-						<span>Base Sepolia</span>
-					</div>
+	return (
+		<div className='fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 px-4'>
+			<div className='bg-card border border-border rounded-2xl p-6 w-full max-w-sm space-y-5 shadow-xl'>
+				<div className='space-y-1'>
+					<h3 className='font-bold text-lg text-card-foreground'>Confirm Payout</h3>
+					<p className='text-xs text-muted-foreground'>
+						Review the details before sending.
+					</p>
 				</div>
 
-				<div className='bg-gray-50 rounded-lg px-3 py-2 text-xs text-gray-500'>
-					⛽ Gas sponsored by Paymaster —{' '}
-					<span className='italic'>mocked for this demo</span>
+				<div className='divide-y divide-border rounded-lg border border-border overflow-hidden'>
+					{rows.map(({ label, value }) => (
+						<div
+							key={label}
+							className='flex items-center justify-between px-4 py-3 bg-card text-sm'
+						>
+							<span className='text-muted-foreground'>{label}</span>
+							<span className='text-card-foreground'>{value}</span>
+						</div>
+					))}
+				</div>
+
+				<div className='bg-muted border border-border rounded-lg px-3 py-2 text-xs text-muted-foreground flex items-center gap-2'>
+					<span>⛽</span>
+					<span>
+						Gas sponsored by Paymaster —{' '}
+						<span className='italic'>mocked for this demo</span>
+					</span>
 				</div>
 
 				<div className='flex gap-3'>
 					<button
 						onClick={onCancel}
 						disabled={isLoading}
-						className='flex-1 px-4 py-2 border border-gray-200 rounded-lg text-sm hover:bg-gray-50 disabled:opacity-50'
+						className='flex-1 px-4 py-2.5 border border-border rounded-lg text-sm text-foreground hover:bg-muted transition-colors disabled:opacity-50'
 					>
 						Cancel
 					</button>
 					<button
 						onClick={onConfirm}
 						disabled={isLoading}
-						className='flex-1 px-4 py-2 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 disabled:opacity-50'
+						className='flex-1 px-4 py-2.5 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:opacity-90 transition-opacity disabled:opacity-50'
 					>
-						{isLoading ? 'Sending...' : 'Confirm & Send'}
+						{isLoading ? 'Sending…' : 'Confirm & Send'}
 					</button>
 				</div>
 			</div>
